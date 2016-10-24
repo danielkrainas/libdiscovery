@@ -8,6 +8,7 @@ type Node struct {
 }
 
 type Service struct {
+	ID      string `json:"id"`
 	Name    string `json:"name"`
 	Node    string `json:"name"`
 	Address string `json:"address"`
