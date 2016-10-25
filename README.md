@@ -49,41 +49,7 @@ If you see a bug or have a suggestion, feel free to open an issue [here](https:/
 
 PR's welcome! There are no strict style guidelines, just follow best practices and try to keep with the general look & feel of the code present. All submissions should atleast be `go fmt -s` and have a test to verify *(if applicable)*.
 
-### Development
-
-This is information related to developing libdiscovery itself.
-
-#### Tools
-
-These are tools used for development.
-
-##### Vendoring
-
-`gvt` is used to track and vendor dependencies, install with:
-
-> $ go get github.com/FiloSottile/gvt
-
-For details on usage, see [the project's github](https://github.com/FiloSottile/gvt).
-
-#### Building
-
-Use `go` and build from the root of the project:
-
-> $ go build
-
-You can also use `make` to build all components:
-
-> $ make compile
-
-#### Testing
-
-Use `make` to run tests:
-
-> $ make test
-
-You can also use `go test` directly for any package without additional bootstrapping:
-
-> $ go test ./locator/
+For details on how to extend and develop libdiscovery, see the [development guide](docs/development).
 
 ## License
 
