@@ -4,6 +4,7 @@ import (
 	"github.com/hashicorp/consul/api"
 
 	"github.com/danielkrainas/libdiscovery/locator"
+	"github.com/danielkrainas/libdiscovery/locator/factory"
 )
 
 func init() {
@@ -18,24 +19,8 @@ func (factory *driverFactory) Create(parameters map[string]interface{}) (locator
 		return nil, err
 	}
 
-	return &driver{client}
+	return &driver{client}, nil
 }
-
-///
-type Node struct {
-	Name    string `json:"name"`
-	Address string `json:"address"`
-}
-
-type Service struct {
-	ID      string `json:"id"`
-	Name    string `json:"name"`
-	Node    string `json:"name"`
-	Address string `json:"address"`
-	Port    uint   `json:"port"`
-}
-
-///
 
 type driver struct {
 	client *api.Client
@@ -65,7 +50,7 @@ func (d *driver) Node(name string) (*locator.Node, error) {
 }
 
 func (d *driver) Services() ([]*locator.Service, error) {
-	servicesByTag, _, err := d.client.Catalog().Services(&api.QueryOptions)
+	servicesByTag, _, err := d.client.Catalog().Services(&api.QueryOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -79,7 +64,7 @@ func (d *driver) Services() ([]*locator.Service, error) {
 		for _, name := range services {
 			s, err := d.Service(name)
 			if err != nil {
-				return err
+				return nil, err
 			}
 
 			results = append(results, s)
@@ -90,12 +75,16 @@ func (d *driver) Services() ([]*locator.Service, error) {
 }
 
 func (d *driver) Service(name string) (*locator.Service, error) {
-	service, _, err := d.client.Catalog().Service(name, "", &api.QueryOptions{})
+	services, _, err := d.client.Catalog().Service(name, "", &api.QueryOptions{})
 	if err != nil {
 		return nil, err
 	}
 
-	return convertServiceData(service), nil
+	if len(services) < 1 {
+		return nil, nil
+	}
+
+	return convertServiceData(services[0]), nil
 }
 
 func convertNodeData(n *api.Node) *locator.Node {
@@ -110,7 +99,7 @@ func convertServiceData(s *api.CatalogService) *locator.Service {
 		ID:      s.ServiceID,
 		Name:    s.ServiceName,
 		Node:    s.Node,
-		Port:    s.ServicePort,
+		Port:    uint(s.ServicePort),
 		Address: s.Address,
 	}
 }
