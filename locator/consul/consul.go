@@ -14,7 +14,12 @@ func init() {
 type driverFactory struct{}
 
 func (factory *driverFactory) Create(parameters map[string]interface{}) (locator.Driver, error) {
-	client, err := api.NewClient(api.DefaultConfig())
+	config := api.DefaultConfig()
+	if addr, ok := parameters["addr"].(string); ok {
+		config.Address = addr
+	}
+
+	client, err := api.NewClient(config)
 	if err != nil {
 		return nil, err
 	}
