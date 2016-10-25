@@ -1,4 +1,4 @@
-# libdiscovery Development
+# libdiscovery Dev Guide
 
 This is information related to developing libdiscovery.
 
