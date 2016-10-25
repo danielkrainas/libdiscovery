@@ -49,7 +49,7 @@ If you see a bug or have a suggestion, feel free to open an issue [here](https:/
 
 PR's welcome! There are no strict style guidelines, just follow best practices and try to keep with the general look & feel of the code present. All submissions should atleast be `go fmt -s` and have a test to verify *(if applicable)*.
 
-For details on how to extend and develop libdiscovery, see the [development guide](docs/development).
+For details on how to extend and develop libdiscovery, see the [development guide](docs/development.md).
 
 ## License
 
