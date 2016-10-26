@@ -55,19 +55,21 @@ func (d *driver) Node(name string) (*locator.Node, error) {
 }
 
 func (d *driver) Services() ([]*locator.Service, error) {
-	servicesByTag, _, err := d.client.Catalog().Services(&api.QueryOptions{})
+	servicesByName, _, err := d.client.Catalog().Services(&api.QueryOptions{})
 	if err != nil {
 		return nil, err
 	}
 
 	results := make([]*locator.Service, 0)
-	for tag, services := range servicesByTag {
-		if tag != "" {
-			continue
+	for name, aliases := range servicesByName {
+		if s, err := d.Service(name); err != nil {
+			return nil, err
+		} else {
+			results = append(results, s)
 		}
 
-		for _, name := range services {
-			s, err := d.Service(name)
+		for _, alias := range aliases {
+			s, err := d.Service(alias)
 			if err != nil {
 				return nil, err
 			}
